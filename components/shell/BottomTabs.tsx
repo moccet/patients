@@ -6,7 +6,6 @@ import { Icon } from "./Icon";
 
 const TABS = [
   { id: "home", href: "/home", label: "Home" },
-  { id: "health", href: "/health", label: "Health" },
   { id: "visits", href: "/visits", label: "Visits" },
   { id: "chat", href: "/chat", label: "Chat" },
 ] as const;

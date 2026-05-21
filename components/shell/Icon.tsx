@@ -1,4 +1,4 @@
-type IconName = "home" | "health" | "visits" | "chat";
+type IconName = "home" | "visits" | "chat";
 
 export function Icon({ name, active }: { name: IconName; active: boolean }) {
   const stroke = active ? "var(--text)" : "var(--text-3)";
@@ -11,18 +11,6 @@ export function Icon({ name, active }: { name: IconName; active: boolean }) {
             d="M3 11L12 4L21 11V20C21 20.55 20.55 21 20 21H15V14H9V21H4C3.45 21 3 20.55 3 20V11Z"
             stroke={stroke}
             strokeWidth={sw}
-            strokeLinejoin="round"
-          />
-        </svg>
-      );
-    case "health":
-      return (
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-          <path
-            d="M3 12H7L9 6L12 18L15 9L17 12H21"
-            stroke={stroke}
-            strokeWidth={sw}
-            strokeLinecap="round"
             strokeLinejoin="round"
           />
         </svg>

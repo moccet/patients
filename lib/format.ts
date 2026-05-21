@@ -53,14 +53,3 @@ export function formatPastDate(iso: string): string {
     year: "numeric",
   });
 }
-
-/**
- * Status-dot color for a domain trend. Negative trend → red, mild → amber,
- * positive → green. Matches the JSX's color tokens.
- */
-export function domainStatusColor(score: number, trend: number | null): string {
-  if (trend !== null && trend <= -10) return "var(--red)";
-  if (trend !== null && trend <= -3) return "var(--amber)";
-  if (score < 60) return "var(--amber)";
-  return "var(--green)";
-}

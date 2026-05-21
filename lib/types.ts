@@ -12,51 +12,6 @@ export type HomePayload = {
     intakeRequired: boolean;
     intakeCompleted: boolean;
   } | null;
-  wellness: {
-    score: number;
-    trend: number | null;
-    summaryProse: string | null;
-    domains: { name: string; score: number; trend: number | null; sub: string | null }[];
-  } | null;
-  insights: {
-    id: string;
-    when: string;
-    title: string;
-    domain: string | null;
-    severity: "attention" | "watch" | "good";
-    body: string;
-  }[];
-};
-
-export type WellnessPayload = {
-  score: number | null;
-  trend?: number | null;
-  summaryProse?: string | null;
-  methodologyVersion?: string;
-  snapshotDate?: string;
-  domains: {
-    name: string;
-    score: number;
-    trend: number | null;
-    sub: string | null;
-    prose: string | null;
-  }[];
-  series: {
-    composite: { date: string; value: number }[];
-    byDomain: Record<string, { date: string; value: number }[]>;
-  };
-};
-
-export type WearablesPayload = {
-  metrics: Record<string, { day: number; value: number; unit: string | null }[]>;
-};
-
-export type MethodologyPayload = {
-  version: string;
-  weights: Record<string, number>;
-  citations: { domain: string; ref: string }[];
-  prose: Record<string, string>;
-  pdfAvailable: boolean;
 };
 
 export type VisitsPayload = {

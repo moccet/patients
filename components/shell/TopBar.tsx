@@ -6,12 +6,11 @@ import { Logo } from "../primitives/Logo";
 
 const TABS = [
   { href: "/home", label: "Home" },
-  { href: "/health", label: "Health" },
   { href: "/visits", label: "Visits" },
   { href: "/chat", label: "Chat" },
 ] as const;
 
-export type TabId = "home" | "health" | "visits" | "chat";
+export type TabId = "home" | "visits" | "chat";
 
 export function TopBar({ initials = "JW" }: { initials?: string }) {
   const pathname = usePathname() ?? "";
