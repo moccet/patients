@@ -57,22 +57,50 @@ Add Vercel preview URLs here if you want preview deploys of the portal to call t
 
 ## 6. Onboard a patient
 
-There is no self-signup. Two routes:
+All 421 existing Firebase users were backfilled into `auth.users` on
+2026-05-21 via `scripts/backfill-firebase-users-to-supabase.mjs` —
+they can sign in to the portal immediately with magic links. For
+brand-new patients:
 
-1. **Invite via dashboard:** Auth → Users → "Invite User" → patient gets Supabase's invite email → after first sign-in, copy their `auth.users.id` and insert a row in `patient_profiles` with their first/last name.
-2. **Self-serve magic link:** Patient visits `https://patients.thewellnesslondon.com/auth/sign-in`, types their email, clicks the link in the email. On first sign-in `auth.users` is created; you still need a `patient_profiles` row for their first name to render in the greeting.
+1. **Self-serve magic link (preferred):** Patient visits
+   `https://patients.thewellnesslondon.com/auth/sign-in`, types their
+   email, clicks the link. On first sign-in `auth.users` is created;
+   the `handle_new_patient_user` trigger automatically backfills any
+   `encounters` matching their `treatment_patients.email`.
+2. **Invite via dashboard:** Auth → Users → "Invite User" — sends
+   Supabase's invite email. Same trigger fires on row creation.
 
-Either way: the patient won't see any encounters until you either backfill from legacy bookings (see §8) or insert an `encounters` row manually.
+Optionally insert a `patient_profiles` row for the patient so their
+first name renders in the greeting (no row → "Good morning." rather
+than "Good morning, Alice.").
 
-## 7. Encounter backfill — applied
+## 7. Encounter backfill — applied + ongoing sync
 
-`scripts/backfill-encounters.sql` was applied 2026-05-21: 43 encounters created from 82 `patient_treatments` rows. 39 were skipped because the underlying `treatment_patients` had no matching `auth.users.email`. Re-run the script after onboarding more patients to pick up their historical treatments — it's idempotent (de-dupes on `legacy_booking_ref`).
+One-shot backfill: `scripts/backfill-encounters.sql` was applied
+2026-05-21 (43 encounters from 82 `patient_treatments`).
+
+Ongoing sync: migration `20260521_encounters_sync_triggers.sql` added
+two triggers:
+- `trg_sync_treatment_to_encounter` (AFTER INSERT/UPDATE on
+  `patient_treatments`) — keeps encounters live with future treatments.
+- `trg_handle_new_patient_user` (AFTER INSERT on `auth.users`) —
+  backfills encounters when a patient signs up.
+
+Combined with the Firebase user backfill, encounters grew to 69 across
+2 distinct patients on 2026-05-21. New treatments and new signups now
+flow into encounters automatically.
 
 ## 8. Known follow-ups (not blocking launch)
 
-- **Encounter sync from new bookings.** The backfill catches existing rows but new `patient_treatments` inserts don't automatically mirror to `encounters`. Add a Postgres trigger or a periodic sync if you want this to stay current.
-- **Firebase → Supabase auth cutover for the main app.** The portal uses Supabase Auth exclusively. The main `thewellness/` app still uses Firebase for its 19 routes that call `adminAuth.verifyIdToken`. A patient onboarded via the portal cannot use main-app features (booking, shop, AI doctor) until those routes are swapped. Multi-week project.
-- **Methodology storage bucket** — still exists, empty. Delete via Supabase dashboard.
+- **Firebase → Supabase auth cutover for the main app (Scope B).** Scope
+  A is complete — Firebase users are mirrored into Supabase (see §6) so
+  the portal works for everyone. The main `thewellness/` app still uses
+  Firebase for its 19 routes that call `adminAuth.verifyIdToken`. A
+  patient onboarded via the portal cannot use main-app features
+  (booking, shop, AI doctor) until those routes are swapped. Multi-week
+  project; not blocking portal usage.
+- **Methodology storage bucket** — still exists, empty. Delete via
+  Supabase dashboard.
 
 ## 9. Pre-launch verification
 
