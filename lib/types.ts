@@ -51,6 +51,35 @@ export type IntakeTemplatePayload = {
   completedAt: string | null;
 };
 
+export type Medication = {
+  id: string;
+  name: string;
+  dose: string | null;
+  frequency: string | null;
+  notes: string | null;
+  startedAt: string | null;
+  createdAt: string;
+};
+
+export type Condition = {
+  id: string;
+  name: string;
+  diagnosedAt: string | null;
+  notes: string | null;
+  createdAt: string;
+};
+
+export type AllergySeverity = "mild" | "moderate" | "severe" | "life_threatening";
+
+export type Allergy = {
+  id: string;
+  name: string;
+  severity: AllergySeverity | null;
+  reaction: string | null;
+  notes: string | null;
+  createdAt: string;
+};
+
 export type ProfilePayload = {
   patientId: string;
   email: string | null;
@@ -58,4 +87,21 @@ export type ProfilePayload = {
   lastName: string | null;
   memberSince: string | null;
   tier: string | null;
+  medications: Medication[];
+  conditions: Condition[];
+  allergies: Allergy[];
 };
+
+export type DocumentType = "lab" | "medical" | "letter" | "other";
+
+export type PatientDocument = {
+  id: string;
+  fileName: string;
+  fileType: string;
+  fileSize: number;
+  documentType: DocumentType;
+  notes: string | null;
+  uploadedAt: string;
+};
+
+export type DocumentsPayload = { documents: PatientDocument[] };

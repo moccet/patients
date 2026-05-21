@@ -6,4 +6,5 @@ export const queryKeys = {
   intakeTemplate: (encounterId: string) =>
     ["me", "intake", encounterId, "template"] as const,
   profile: () => ["me", "profile"] as const,
+  documents: () => ["me", "documents"] as const,
 };

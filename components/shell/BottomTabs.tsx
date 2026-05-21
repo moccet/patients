@@ -7,7 +7,9 @@ import { Icon } from "./Icon";
 const TABS = [
   { id: "home", href: "/home", label: "Home" },
   { id: "visits", href: "/visits", label: "Visits" },
+  { id: "labs", href: "/labs", label: "Labs" },
   { id: "chat", href: "/chat", label: "Chat" },
+  { id: "profile", href: "/profile", label: "Profile" },
 ] as const;
 
 export function BottomTabs() {

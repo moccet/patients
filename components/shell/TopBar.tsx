@@ -7,10 +7,12 @@ import { Logo } from "../primitives/Logo";
 const TABS = [
   { href: "/home", label: "Home" },
   { href: "/visits", label: "Visits" },
+  { href: "/labs", label: "Labs" },
   { href: "/chat", label: "Chat" },
+  { href: "/profile", label: "Profile" },
 ] as const;
 
-export type TabId = "home" | "visits" | "chat";
+export type TabId = "home" | "visits" | "labs" | "chat" | "profile";
 
 export function TopBar({ initials = "JW" }: { initials?: string }) {
   const pathname = usePathname() ?? "";
@@ -55,7 +57,9 @@ export function TopBar({ initials = "JW" }: { initials?: string }) {
         </nav>
       </div>
       <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-        <div
+        <Link
+          href="/settings"
+          aria-label="Settings"
           style={{
             width: 32,
             height: 32,
@@ -67,10 +71,11 @@ export function TopBar({ initials = "JW" }: { initials?: string }) {
             justifyContent: "center",
             fontSize: 11,
             fontWeight: 500,
+            textDecoration: "none",
           }}
         >
           {initials}
-        </div>
+        </Link>
       </div>
     </div>
   );

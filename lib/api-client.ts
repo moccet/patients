@@ -23,7 +23,11 @@ export async function api<T = unknown>(
 ): Promise<T> {
   const headers = new Headers(init?.headers ?? {});
   headers.set("accept", "application/json");
-  if (init?.body && !headers.has("content-type")) {
+  // For FormData bodies the browser auto-sets multipart Content-Type with
+  // its boundary token — never override that, or the server can't parse.
+  const isFormData =
+    typeof FormData !== "undefined" && init?.body instanceof FormData;
+  if (init?.body && !headers.has("content-type") && !isFormData) {
     headers.set("content-type", "application/json");
   }
 

@@ -1,4 +1,4 @@
-type IconName = "home" | "visits" | "chat";
+type IconName = "home" | "visits" | "labs" | "chat" | "profile";
 
 export function Icon({ name, active }: { name: IconName; active: boolean }) {
   const stroke = active ? "var(--text)" : "var(--text-3)";
@@ -22,6 +22,18 @@ export function Icon({ name, active }: { name: IconName; active: boolean }) {
           <path d="M3 10H21M8 3V7M16 3V7" stroke={stroke} strokeWidth={sw} strokeLinecap="round" />
         </svg>
       );
+    case "labs":
+      return (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <path
+            d="M9 3v6.5L4.5 18a2 2 0 0 0 1.74 3h11.52a2 2 0 0 0 1.74-3L15 9.5V3"
+            stroke={stroke}
+            strokeWidth={sw}
+            strokeLinejoin="round"
+          />
+          <path d="M8 3h8" stroke={stroke} strokeWidth={sw} strokeLinecap="round" />
+        </svg>
+      );
     case "chat":
       return (
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
@@ -30,6 +42,18 @@ export function Icon({ name, active }: { name: IconName; active: boolean }) {
             stroke={stroke}
             strokeWidth={sw}
             strokeLinejoin="round"
+          />
+        </svg>
+      );
+    case "profile":
+      return (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="8" r="4" stroke={stroke} strokeWidth={sw} />
+          <path
+            d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"
+            stroke={stroke}
+            strokeWidth={sw}
+            strokeLinecap="round"
           />
         </svg>
       );
