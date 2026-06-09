@@ -1,5 +1,6 @@
 import { TopBar } from "@/components/shell/TopBar";
 import { BottomTabs } from "@/components/shell/BottomTabs";
+import AdminViewAsControl from "@/components/admin/AdminViewAsControl";
 import { getServerSupabase } from "@/lib/supabase/server";
 
 function initialsFromEmail(email: string | null): string {
@@ -22,6 +23,7 @@ export default async function PortalLayout({
 
   return (
     <div style={{ minHeight: "100vh", background: "var(--bg)", color: "var(--text)" }}>
+      <AdminViewAsControl />
       <TopBar initials={initialsFromEmail(user?.email ?? null)} />
       {children}
       <BottomTabs />

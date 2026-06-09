@@ -38,6 +38,13 @@ export async function api<T = unknown>(
     if (token) headers.set("authorization", `Bearer ${token}`);
   }
 
+  // Impersonation header — when an admin has chosen to view as another
+  // patient (see /admin/view-as), every API call needs to tell the server
+  // which patient to read for. Server-side resolveMe() validates the
+  // caller is on the admin allowlist before honouring it.
+  const impersonate = readImpersonateCookie();
+  if (impersonate) headers.set("x-impersonate-patient", impersonate);
+
   const url = path.startsWith("http")
     ? path
     : `${NEXT_PUBLIC_API_BASE}/api/v1/me${path.startsWith("/") ? path : `/${path}`}`;
@@ -62,4 +69,31 @@ export async function api<T = unknown>(
   // 204 No Content
   if (res.status === 204) return undefined as T;
   return (await res.json()) as T;
+}
+
+const IMPERSONATE_COOKIE = "tw_view_as";
+
+function readImpersonateCookie(): string | null {
+  if (typeof document === "undefined") return null;
+  const match = document.cookie.match(
+    new RegExp("(?:^|; )" + IMPERSONATE_COOKIE + "=([^;]+)"),
+  );
+  return match ? decodeURIComponent(match[1]) : null;
+}
+
+export function getImpersonatePatientId(): string | null {
+  return readImpersonateCookie();
+}
+
+export function setImpersonatePatient(patientId: string): void {
+  if (typeof document === "undefined") return;
+  // Session cookie scoped to the portal subdomain. Not http-only — the
+  // client needs to read it to attach the header. SameSite=Strict so it
+  // never leaks cross-site.
+  document.cookie = `${IMPERSONATE_COOKIE}=${encodeURIComponent(patientId)}; Path=/; SameSite=Strict`;
+}
+
+export function clearImpersonatePatient(): void {
+  if (typeof document === "undefined") return;
+  document.cookie = `${IMPERSONATE_COOKIE}=; Path=/; SameSite=Strict; Max-Age=0`;
 }
